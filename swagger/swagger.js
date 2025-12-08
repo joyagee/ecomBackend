@@ -18,8 +18,8 @@ const options = {
     ],
   },
 
-  // Path where your route files are located
-  apis: ["./Routes/*.js"],
+  // Path where your route files ./Router/*.js are located
+  apis: ["./Router/*.js"],
 };
 
 const swaggerSpec = swaggerJsdoc(options);
