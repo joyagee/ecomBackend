@@ -8,7 +8,7 @@ const userRouter =  express.Router();
  * @swagger
  * /loginUser:
  *   post:
- *     summary: 
+ *     summary: User login
  *     tags:
  *       - User
  *     requestBody:
@@ -24,9 +24,8 @@ const userRouter =  express.Router();
  *                 type: string
  *     responses:
  *       200:
- *         description: Login Successfull
+ *         description: Login successful
  */
-
 userRouter.post("/loginUser", loginUser);
 userRouter.post("/registerUser", uploads.single("image"), registerUser);
 module.exports = userRouter;
