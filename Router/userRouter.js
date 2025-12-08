@@ -1,8 +1,6 @@
 const express = require("express")
-
 const { loginUser, registerUser} = require("../controllers/userController");
 const uploads = require("../middlewares/uploads");
-
 const userRouter =  express.Router();
 
 /**
@@ -26,9 +24,6 @@ const userRouter =  express.Router();
  *         description: Login Successful
  */
 userRouter.post("/loginUser", loginUser);
-
 userRouter.post("/registerUser", uploads.single("image"), registerUser);
-
-
 module.exports = userRouter;
 

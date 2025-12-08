@@ -1,7 +1,7 @@
 
 
-const swaggerJsdoc =require ('swagger-jsdoc')
-const swaggerUi  = require ('swagger-ui-express')
+const swaggerJsdoc = require('swagger-jsdoc')
+const swaggerUi  = require('swagger-ui-express')
 
 const options = {
   definition: {
@@ -18,7 +18,7 @@ const options = {
     ],
   },
 
-  // Path where your route files ./Router/*.js are located
+  // Path where your route files  are located
   apis: ["./Router/*.js"],
 };
 
