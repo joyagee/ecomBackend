@@ -95,6 +95,30 @@ exports.initializePayment = async (req, res) => {
       .json({ success: false, message: "Somthing went wrong!" });
   }
 };
+exports.getPurchased = async (req, res) => {
+  try {
+    const userid = Number(req.params.userid);
+
+    const receipts = await prisma.receipt.findMany({
+      where: { userId: userid },
+      include: { receiptItems: true },
+      orderBy: { createdAt: "desc" }
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Purchased products fetched successfully",
+      data: receipts
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong fetching purchased items"
+    });
+  }
+};
+
 
 exports.verifyPayment = async (req, res) => {
   console.log('start')

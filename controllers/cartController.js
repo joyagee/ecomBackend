@@ -2,104 +2,105 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 // Add to Cart (Upgraded)
-// exports.addToCart = async (req, res) => {
-//   console.log("reqbody:", req.body);
+exports.addToCart = async (req, res) => {
+  console.log("reqbody:", req.body);
 
-//   const { userid, productid, color, size, quantity } = req.body;
-//   const parseduserid = parseInt(userid);
-//   const parsedproductid = parseInt(productid);
+  const { userid, productid, color, size, quantity } = req.body;
+  const parseduserid = parseInt(userid);
+  const parsedproductid = parseInt(productid);
 
-//   try {
-//     // find or create cart
-//     const existingCart = await prisma.cart.upsert({
-//       where: { userid: parseduserid },
-//       update: {},
-//       create: { userid: parseduserid },
-//     });
+  try {
+    // find or create cart
+    const existingCart = await prisma.cart.upsert({
+      where: { userid: parseduserid },
+      update: {},
+      create: { userid: parseduserid },
+    });
 
-//     // check product exists
-//     const existingProduct = await prisma.product.findUnique({
-//       where: { id: parsedproductid },
-//     });
+    // check product exists
+    const existingProduct = await prisma.product.findUnique({
+      where: { id: parsedproductid },
+    });
 
-//     if (!existingProduct) {
-//       return res.status(400).json({
-//         success: false,
-//         message: "Product does not exist in database!",
-//       });
-//     }
+    if (!existingProduct) {
+      return res.status(400).json({
+        success: false,
+        message: "Product does not exist in database!",
+      });
+    }
 
-//     // check if item already exists
-//     const existingCartItem = await prisma.producCart.findUnique({
-//       where: {
-//         productid_cartid: {
-//           productid: parsedproductid,
-//           cartid: existingCart.id,
-//         },
-//       },
-//     });
+    // check if item already exists
+    const existingCartItem = await prisma.producCart.findUnique({
+      where: {
+        productid_cartid: {
+          productid: parsedproductid,
+          cartid: existingCart.id,
+        },
+      },
+    });
 
-//     let message;
+    let message;
 
-//     if (existingCartItem) {
-//       // update quantity instead of returning error
-//       const newQty =
-//         Number(existingCartItem.quantity || 0) +
-//         (quantity ? Number(quantity) : 1);
+    if (existingCartItem) {
+      // update quantity instead of returning error
+      const newQty =
+        Number(existingCartItem.quantity || 0) +
+        (quantity ? Number(quantity) : 1);
 
-//       await prisma.producCart.update({
-//         where: {
-//           productid_cartid: {
-//             productid: parsedproductid,
-//             cartid: existingCart.id,
-//           },
-//         },
-//         data: {
-//           quantity: newQty,
-//           selectedcolor: color ? color : existingCartItem.selectedcolor,
-//           selectedsize: size ? size : existingCartItem.selectedsize,
-//         },
-//       });
+      await prisma.producCart.update({
+        where: {
+          productid_cartid: {
+            productid: parsedproductid,
+            cartid: existingCart.id,
+          },
+        },
+        data: {
+          quantity: newQty,
+          selectedcolor: color ? color : existingCartItem.selectedcolor,
+          selectedsize: size ? size : existingCartItem.selectedsize,
+        },
+      });
 
-//       message = "Item already in cart, quantity updated";
-//     } else {
-//       // add item
-//       await prisma.producCart.create({
-//         data: {
-//           product: { connect: { id: parsedproductid } },
-//           cart: { connect: { id: existingCart.id } },
-//           selectedcolor: color || null,
-//           selectedsize: size || null,
-//           quantity: quantity ? Number(quantity) : 1,
-//         },
-//       });
+      message = "Item already in cart, quantity updated";
+    } else {
+      // add item
+      await prisma.producCart.create({
+        data: {
+          product: { connect: { id: parsedproductid } },
+          cart: { connect: { id: existingCart.id } },
+          selectedcolor: color || null,
+          selectedsize: size || null,
+          quantity: quantity ? Number(quantity) : 1,
+        },
+      });
 
-//       message = "Item added to cart successfully";
-//     }
+      message = "Item added to cart successfully";
+    }
 
-//     // return updated cart
-//     const userUpdatedCart = await prisma.cart.findUnique({
-//       where: { userid: parseduserid },
-//       include: {
-//         ProducCart: {
-//           include: { product: true },
-//         },
-//       },
-//     });
+    // return updated cart
+    const userUpdatedCart = await prisma.cart.findUnique({
+      where: { userid: parseduserid },
+      include: {
+        ProducCart: {
+          include: { product: true },
+        },
+      },
+    });
 
-//     res.status(200).json({
-//       success: true,
-//       message: message,
-//       data: userUpdatedCart,
-//     });
-//   } catch (error) {
-//     console.log("error in addToCart =>", error);
-//     res.status(500).json({
-//       success: false,
-//       message: "Internal server error",
-//     });
-//   }
-// };
+    res.status(200).json({
+      success: true,
+      message: message,
+      data: userUpdatedCart,
+    });
+  } catch (error) {
+    console.log("error in addToCart =>", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
 
 // backend cart controller
 exports.addToCart = async (req, res) => {
