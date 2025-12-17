@@ -43,7 +43,7 @@ exports.initializePayment = async (req, res) => {
       amount: totalPrice,
       currency: "NGN",
       redirect_url:
-      `${process.env.FRONTEND_URL}/verify-payment`,
+        `${process.env.FRONTEND_URL}/verify-payment`,
       // redirect_url: 'https://your-app.com/payment-success', always remember to change
 
       customer: {
@@ -53,10 +53,10 @@ exports.initializePayment = async (req, res) => {
       },
 
       meta: {
-     
+
         userid: user.id,
         order_id,
-        
+
       },
 
       customizations: {
@@ -126,7 +126,7 @@ exports.verifyPayment = async (req, res) => {
   const { transaction_id } = req.query
   // const { order_id, email } = req.body
 
- 
+
 
   console.log('Flutterwave redirect data:', req.query)
 
@@ -141,7 +141,7 @@ exports.verifyPayment = async (req, res) => {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${process.env.FLW_SECRET_KEY
-}`
+            }`
         }
       }
     )
@@ -224,6 +224,11 @@ exports.verifyPayment = async (req, res) => {
       where: { orderId: order_id },
       include: { receiptItems: true }
     })
+
+    // Clear cart after successful payment
+    await prisma.producCart.deleteMany({
+      where: { cartid: userCart.id }
+    });
 
     return res.status(200).json({
       success: true,
