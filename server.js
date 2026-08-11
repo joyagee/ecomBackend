@@ -12,8 +12,19 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://grandeur-lovat.vercel.app"],
-    method: ["GET", "POST", "PATCH", "DELETE"],
+    origin: function (origin, callback) {
+      const allowedOrigins = [
+        "http://localhost:5173",
+        "http://localhost:3000",
+      ];
+      // Allow all vercel.app domains
+      if (!origin || allowedOrigins.includes(origin) || /\.vercel\.app$/.test(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true,
   })
 );
